@@ -3,14 +3,7 @@ import sys
 from typing import List, Any
 
 
-def solve(lines: List[str]) -> Any:
-	"""
-	Implement this function to solve the puzzle.
-
-	`lines` is a list of strings where each string corresponds to a row in
-	`input.txt` (trailing newlines removed). Return a value that can be
-	printed (string, number, or a list/tuple of printable items).
-	"""
+def solvePart1(lines: List[str]) -> Any:
 	position = 50
 	count = 0
 	for move in lines:
@@ -20,6 +13,32 @@ def solve(lines: List[str]) -> Any:
 		position = (position + (times * int(move[1:]))) % 100
 		if position == 0:
 			count += 1
+	return count
+
+def solvePart2(lines: List[str]) -> Any:
+	position = 50
+	count = 0
+	for move in lines:
+		times = 1
+		if move[0] == "L":
+			times = -1
+		movement = int(move[1:])
+		
+		count += movement // 100
+		movement = movement % 100
+
+		if times == 1:
+			if position == 100:
+				position = 0
+			if position + movement >= 100:
+				count += 1
+			position = (position + movement) % 100
+		else:
+			if position == 0:
+				position = 100
+			if position - movement <= 0:
+				count += 1
+			position = (position - movement) % 100
 	return count
 
 def main() -> None:
@@ -33,9 +52,8 @@ def main() -> None:
 	with input_path.open("r", encoding="utf-8") as f:
 		lines = [line.rstrip("\n") for line in f]
 
-	result = solve(lines)
+	result = solvePart2(lines)
 	print(result)
-
 
 if __name__ == "__main__":
 	main()
